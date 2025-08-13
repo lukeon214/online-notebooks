@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Edit <%= notebook.name %></title>
+</head>
+<body>
+  <h1>Editing: <%= notebook.name %></h1>
+  <p><a href="/dashboard">Back to dashboard</a></p>
+
+  <textarea id="editor" rows="20" cols="80" placeholder="Type your notes here..."></textarea>
+  <br>
+  <button id="saveBtn">Save Now</button>
+  <span id="status"></span>
+
+  <script>
+    const notebookId = <%= notebook.id %>;
+    let saveTimer;
+
+    async function loadContent() {
+      const res = await fetch(`/api/notebooks/${notebookId}/content`);
+      const data = await res.json();
+      if (data.ok) {
+        document.getElementById('editor').value = data.content || '';
+      }
+    }
+
+    async function saveContent() {
+      const content = document.getElementById('editor').value;
+      const res = await fetch(`/api/notebooks/${notebookId}/content`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content })
+      });
+      const data = await res.json();
+      document.getElementById('status').textContent = data.ok ? 'Saved!' : 'Error saving';
+      if (data.ok) {
+        setTimeout(() => { document.getElementById('status').textContent = ''; }, 2000);
+      }
+    }
+
+    document.getElementById('saveBtn').addEventListener('click', saveContent);
+
+    // Auto-save every 5s
+    setInterval(saveContent, 5000);
+
+    loadContent();
+  </script>
+</body>
+</html>
