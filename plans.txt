@@ -1,0 +1,8 @@
+Rename Notebook — change its title without editing contents.
+
+Notebook Tags — label notebooks with subjects like “Math”, “History”.
+
+Last Updated Timestamp — show when the notebook was last edited.
+
+Export Notebook — download as .txt or .pdf
+
